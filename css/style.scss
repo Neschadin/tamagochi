@@ -1,0 +1,730 @@
+@use "./reset.local";
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+// bird !
+
+$birdColor: #11e7d7;
+$birdColor_d: #6f5983;
+$birdColor2: #31bfae;
+$birdColor3: #01c7be;
+$feetColor: #f8c14d;
+$beakColor: #f7d35d;
+$beakColor2: #eb9f2d;
+
+$birdColor3: #01c7be;
+
+$timeline: ('begin' : 0s,
+    'eye-p0-1' : 0.4s,
+    'eye-p1-1' : 0.4s,
+    'eye-p4-1' : 1.8s,
+    'eye-p3-1' : 0.4s,
+    'eye-p4-2' : 1s,
+    'eye-p2-1' : 0.1s,
+    'end' : 0.4s);
+
+$totaltime: 0s;
+$timelineAccumulated: ();
+
+@each $key,
+$time in $timeline {
+    $totaltime: $totaltime + $time;
+    $timelineAccumulated: map-merge($timelineAccumulated, ($key : $totaltime));
+}
+
+@function tp($key, $offset: 0s) {
+    @return (map-get($timelineAccumulated, $key) + $offset) / $totaltime * 100%;
+}
+
+@keyframes eyes {
+
+    #{tp('begin')},
+    #{tp('eye-p0-1')},
+    #{tp('end')} {
+        top: -50px;
+    }
+
+    #{tp('eye-p1-1')} {
+        top: -45px;
+    }
+
+    #{tp('eye-p2-1')} {
+        top: -20px;
+    }
+
+    #{tp('eye-p4-1')},
+    #{tp('eye-p4-2')} {
+        top: -15px;
+    }
+
+    #{tp('eye-p3-1')} {
+        top: -25px;
+    }
+}
+
+@keyframes wings {
+
+    #{tp('begin')},
+    #{tp('eye-p4-2')},
+    #{tp('end')} {
+        top: 70px;
+    }
+
+    #{tp('eye-p2-1')} {
+        top: 60px;
+    }
+}
+
+@keyframes feet {
+
+    #{tp('begin')},
+    #{tp('eye-p4-2')},
+    #{tp('end')} {
+        top: -2px;
+    }
+
+    #{tp('eye-p2-1')} {
+        top: 0px;
+    }
+}
+
+@keyframes cloud {
+    0% {
+        left: -140px;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+.js-not-animated {
+    animation: none;
+}
+
+
+html {
+    width: 100%;
+    min-width: 720px;
+    height: 100vh;
+    background-color: rgba(34, 32, 36, 1);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font: normal 100% sans-serif;
+}
+
+h2 {
+    font-size: 4vw;
+    color: #11e7d7;
+}
+
+.globe {
+    margin: 1em 0 0 0;
+    position: relative;
+    display: inline-block;
+    text-align: left;
+    width: 90%;
+    height: 400px;
+    border: 20px solid #f7dbcf;
+    box-sizing: border-box;
+    background: linear-gradient(to bottom, rgb(134, 174, 204) 0%, rgba(212, 228, 239, 1) 100%);
+    overflow: hidden;
+    box-shadow: inset 0 0 80px rgba(0, 0, 0, .5),
+        0 0 20px rgba(0, 0, 0, .3);
+
+    &:before,
+    &:after {
+        position: absolute;
+        content: "";
+        box-sizing: border-box;
+        border-radius: 50%;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    &:before {
+        height: 74%;
+        width: 14%;
+        top: 13%;
+        right: 3%;
+        border: 10px solid transparent;
+        border-right-color: rgba(255, 255, 255, .3);
+        border-right-width: 10px;
+        border-right-style: solid;
+    }
+
+    &:after {
+        top: 40px;
+        right: 8%;
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 255, 255, .3);
+    }
+
+    .tamagochi_wrapper {
+        position: relative;
+        top: 100px;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .instance_metrics {
+        position: relative;
+        margin: auto;
+        display: flex;
+        top: -92px;
+        flex-direction: column;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 80%;
+        color: #002370;
+        width: 140px;
+
+        div {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    .bird {
+        width: 175px;
+        height: 186px;
+        position: relative;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        z-index: 1;
+
+        &:hover {
+            outline: 2px solid #f7dbcf;
+            outline-offset: 5px;
+        }
+
+        &:active {
+            outline: 4px solid #f7dbcf;
+            outline-offset: 5px;
+        }
+
+        .body {
+            position: absolute;
+            width: 175px;
+            height: 186px;
+            border-radius: 50%;
+            background-clip: padding-box;
+            background-color: $birdColor;
+            box-shadow: inset 0 0 80px rgba(0, 0, 0, .3);
+
+            &:before,
+            &:after {
+                position: absolute;
+                content: "";
+                z-index: -1;
+                width: 26px;
+                height: 93px;
+                border-radius: 50%;
+                background-color: $birdColor;
+                box-shadow: inset 0 0 13px rgba(0, 0, 0, .3);
+                top: 70px;
+                animation: wings $totaltime linear infinite;
+            }
+
+            &:before {
+                left: 0;
+            }
+
+            &:after {
+                right: 0;
+            }
+
+            .eye {
+                position: absolute;
+                z-index: 1;
+                overflow: hidden;
+                width: 56px;
+                height: 56px;
+                top: 28px;
+                border-radius: 50%;
+                background-color: #fff;
+                border: 1px solid $birdColor3;
+                box-shadow: inset 0 0 0 1px $birdColor3;
+
+                &:before,
+                &:after {
+                    position: absolute;
+                    content: "";
+                }
+
+                &:before {
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    background-color: #000;
+                    top: 30px;
+                }
+
+                &:after {
+                    width: 200px;
+                    height: 200px;
+                    background: radial-gradient(ellipse at center,
+                            rgba(109, 0, 25, 0) 0%,
+                            rgba(130, 1, 31, 0) 35%,
+                            $birdColor3 36%,
+                            $birdColor2 100%);
+                    animation: eyes $totaltime linear infinite;
+                }
+
+                &.left {
+                    left: 15px;
+
+                    &:before {
+                        left: 20px;
+                    }
+
+                    &:after {
+                        left: -60px;
+                        top: -45px;
+                    }
+                }
+
+                &.right {
+                    right: 15px;
+
+                    &:before {
+                        right: 20px;
+                    }
+
+                    &:after {
+                        right: -60px;
+                        top: -45px;
+                    }
+                }
+            }
+
+            .beak {
+                position: absolute;
+                z-index: 3;
+                width: 41px;
+                height: 55px;
+                top: 70px;
+                left: 67px;
+                border-radius: 50%;
+                background-color: $birdColor2;
+
+                &:before {
+                    position: absolute;
+                    content: "";
+                    width: inherit;
+                    height: inherit;
+                    top: 2px;
+                    border-radius: 50%;
+                    background: $beakColor2;
+                }
+
+                &:after {
+                    position: absolute;
+                    content: "";
+                    z-index: -1;
+                    width: 37px;
+                    height: inherit;
+                    top: 12px;
+                    left: 2px;
+                    border-radius: 50%;
+                    background: $birdColor2;
+                }
+
+                div {
+                    position: absolute;
+                    width: 43px;
+                    height: 43px;
+                    top: -1px;
+                    left: -1px;
+                    border-radius: 50% 60% 50% 40%;
+                    background-clip: padding-box;
+                    background-color: $beakColor;
+                    transform: rotate(-45deg);
+
+                    &:before {
+                        position: absolute;
+                        content: "";
+                        transform: rotate(45deg);
+                        width: 17px;
+                        height: 8px;
+                        top: 10px;
+                        left: 20px;
+                        border-radius: 50%;
+                        background-color: #fff;
+                    }
+                }
+            }
+
+            .feet {
+                position: absolute;
+                bottom: 15px;
+                width: 100%;
+
+                &:before,
+                &:after {
+                    position: absolute;
+                    content: "";
+                    width: 27px;
+                    height: 21px;
+                    border-radius: 50%;
+                    background-color: $feetColor;
+                    box-shadow: inset 0 0 12px rgba(0, 0, 0, .2);
+                    animation: feet $totaltime linear infinite;
+                }
+
+                &:before {
+                    left: 40px;
+                }
+
+                &:after {
+                    right: 40px;
+                }
+            }
+        }
+
+        .body-after-death {
+            position: absolute;
+            width: 175px;
+            height: 186px;
+            border-radius: 50%;
+            background-clip: padding-box;
+            background-color: $birdColor_d;
+            box-shadow: inset 0 0 80px rgba(68, 0, 194, 0.3);
+
+            &:before,
+            &:after {
+                position: absolute;
+                content: "";
+                z-index: -1;
+                width: 26px;
+                height: 93px;
+                border-radius: 50%;
+                background-color: $birdColor_d;
+                box-shadow: inset 0 0 13px rgba(0, 0, 0, .3);
+                top: 70px;
+            }
+
+            &:before {
+                left: 0;
+            }
+
+            &:after {
+                right: 0;
+            }
+
+            .eye {
+                width: 1em;
+                height: 1em;
+                background-color: rgb(102, 102, 102);
+                clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
+                position: absolute;
+                width: 44px;
+                height: 44px;
+                top: 32px;
+
+                &.left {
+                    left: 22px;
+                }
+
+                &.right {
+                    right: 22px;
+                }
+            }
+
+            .beak {
+                position: absolute;
+                z-index: 3;
+                width: 41px;
+                height: 55px;
+                top: 70px;
+                left: 67px;
+                border-radius: 50%;
+                background-color: $birdColor2;
+
+                &:before {
+                    position: absolute;
+                    content: "";
+                    width: inherit;
+                    height: inherit;
+                    top: 2px;
+                    border-radius: 50%;
+                    background: $beakColor2;
+                }
+
+                &:after {
+                    position: absolute;
+                    content: "";
+                    width: 28px;
+                    height: inherit;
+                    top: 2px;
+                    left: 8px;
+                    border-radius: 50%;
+                    transform: rotate(-40deg);
+                    background: rgb(216, 3, 3);
+                }
+
+                div {
+                    position: absolute;
+                    z-index: 2;
+                    width: 43px;
+                    height: 43px;
+                    top: -1px;
+                    left: -1px;
+                    border-radius: 50% 60% 50% 40%;
+                    background-clip: padding-box;
+                    background-color: $beakColor;
+                    transform: rotate(-45deg);
+
+                    &:before {
+                        position: absolute;
+                        content: "";
+                        transform: rotate(45deg);
+                        width: 17px;
+                        height: 8px;
+                        top: 10px;
+                        left: 20px;
+                        border-radius: 50%;
+                        background-color: #fff;
+                    }
+                }
+            }
+
+            .feet {
+                position: absolute;
+                bottom: 15px;
+                width: 100%;
+
+                &:before,
+                &:after {
+                    position: absolute;
+                    content: "";
+                    width: 27px;
+                    height: 21px;
+                    border-radius: 50%;
+                    background-color: $feetColor;
+                    box-shadow: inset 0 0 12px rgba(0, 0, 0, .2);
+                }
+
+                &:before {
+                    left: 40px;
+                }
+
+                &:after {
+                    right: 40px;
+                }
+            }
+        }
+    }
+
+    .selected {
+        outline: 2px solid #f7dbcf;
+        outline-offset: 5px;
+    }
+
+    .wire {
+        position: absolute;
+        width: 100%;
+        height: 3px;
+        top: 280px;
+        border-color: black;
+        z-index: 1;
+    }
+
+    .hills {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        border-radius: 30%;
+        left: 45%;
+        bottom: -18px;
+        transform: rotate(45deg);
+        background: radial-gradient(ellipse at top left, rgba(170, 217, 93, 1) 0%, rgba(187, 195, 105, 1) 100%);
+        box-shadow: inset 5px 0 12px rgba(0, 0, 0, .2);
+
+        &:before,
+        &:after {
+            position: absolute;
+            content: "";
+            width: 178px;
+            height: 90px;
+            border-radius: 50%;
+            background: inherit;
+            box-shadow: inherit;
+        }
+
+        &:before {
+            left: -90px;
+            top: 30px;
+            z-index: -1;
+            transform: rotate(-20deg);
+        }
+
+        &:after {
+            left: 0px;
+            top: -55px;
+            transform: rotate(120deg);
+        }
+    }
+
+    .cloud {
+        position: absolute;
+        width: 70px;
+        height: 24px;
+        background: linear-gradient(to bottom,
+                rgba(242, 249, 254, 1) 5%,
+                rgba(214, 240, 253, 1) 100%);
+        border-radius: 20px;
+        top: 50px;
+        animation: cloud $totaltime*9 linear infinite;
+
+        &.small {
+            top: 20px;
+            transform: scale(.6);
+            animation-delay: -$totaltime/3;
+            animation-duration: $totaltime*16;
+        }
+
+        &:before,
+        &:after {
+            position: absolute;
+            content: "";
+            background: inherit;
+        }
+
+        &:before {
+            width: 36px;
+            height: 36px;
+            top: -18px;
+            right: 10px;
+            border-radius: 40px;
+        }
+
+        &:after {
+            width: 20px;
+            height: 20px;
+            top: -10px;
+            left: 10px;
+            border-radius: 20px;
+        }
+    }
+}
+
+nav {
+    position: relative;
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    button {
+        background: #f7dbcf;
+        width: 150px;
+        border-radius: 20px;
+        height: 32px;
+        font-weight: 700;
+
+        &:hover {
+            background: #ff682d;
+        }
+
+        &:active {
+            background: #963d1a;
+        }
+    }
+
+    .btns__wrapper {
+        margin-top: 32px;
+        display: flex;
+        gap: 8px;
+
+        button {
+            width: 100px;
+
+
+        }
+    }
+}
+
+
+/* pop_up */
+.popup__bg {
+    z-index: 2;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.5s all;
+
+    &.active {
+        opacity: 1;
+        pointer-events: all;
+        transition: 0.5s all;
+    }
+}
+
+.popup__form {
+    z-index: 2;
+    position: absolute;
+    border-radius: 16px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: #fff;
+    width: 400px;
+    padding: 25px;
+    transition: 0.5s all;
+
+    &.active {
+        transform: translate(-50%, -50%) scale(1);
+        transition: 0.5s all;
+    }
+
+    label {
+        width: 100%;
+        margin-bottom: 25px;
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+    input {
+        height: 45px;
+        font-size: 18px;
+        border: none;
+        outline: none;
+        border-bottom: 1px solid #cfd0d3;
+    }
+
+    input:focus {
+        border-bottom: 1px solid #2982ff;
+    }
+
+    button {
+        width: 100%;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 18px;
+        border: 2px solid #2982ff;
+        background: #2982ff;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: 0.5s all;
+        border-radius: 8px;
+    }
+
+    button:hover {
+        background: #fff;
+        color: #2982ff;
+        transition: 0.5s all;
+    }
+}
