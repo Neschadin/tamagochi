@@ -17,7 +17,7 @@ const showPopup = (mode) => {
 
 popupForm.addEventListener("submit", (e) => {
   let value = e.target[0].value;
-  value = value.replace(/[^a-z|\d]/gi, "");
+  value = value.replace(/[^a-z]/gi, "");
 
   e.preventDefault();
 
